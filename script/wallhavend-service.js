@@ -37,7 +37,7 @@ class WallhavendService {
 		const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 		let seed = '';
-		for (let i = 0; i < 6; i++) {
+		for (let i = 0; i < CONSTANTS.SEED_LENGTH; i++) {
 			seed += this.pickRandomElement(characters);
 		}
 

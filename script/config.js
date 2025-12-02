@@ -16,3 +16,10 @@ const CONFIG = {
 	updateInterval: 60,
 	scaling: 'contain'
 };
+
+const CONSTANTS = Object.freeze({
+	RETRY_DELAY_MS: 1000,
+	ERROR_DISPLAY_MS: 5000,
+	MAX_RETRIES: 3,
+	SEED_LENGTH: 6
+});

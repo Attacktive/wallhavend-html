@@ -16,7 +16,7 @@ class WallpaperManager {
 		this.applyScaling();
 
 		if (CONFIG.updateInterval > 0) {
-			this.startAutoUpdate().then(() => {});
+			this.startAutoUpdate();
 		}
 	}
 
@@ -45,7 +45,7 @@ class WallpaperManager {
 
 		let maxRetries = 1;
 		if (!this.currentWallpaper) {
-			maxRetries = 3;
+			maxRetries = CONSTANTS.MAX_RETRIES;
 		}
 
 		let attempt = 0;
@@ -64,7 +64,7 @@ class WallpaperManager {
 					console.error('Failed to update wallpaper after retries:', error);
 				} else {
 					console.log(`Retrying... (${attempt}/${maxRetries})`);
-					await new Promise(resolve => setTimeout(resolve, 1000));
+					await new Promise(resolve => setTimeout(resolve, CONSTANTS.RETRY_DELAY_MS));
 				}
 			}
 		}
@@ -102,7 +102,7 @@ class WallpaperManager {
 		this.errorMessage.textContent = message;
 		this.errorMessage.classList.remove('hidden');
 
-		setTimeout(() => this.hideError(), 5000);
+		setTimeout(() => this.hideError(), CONSTANTS.ERROR_DISPLAY_MS);
 	}
 
 	hideError() {
