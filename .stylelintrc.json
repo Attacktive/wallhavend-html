@@ -1,6 +1,7 @@
 {
 	"extends": ["stylelint-config-standard"],
 	"rules": {
-		"function-disallowed-list": null
+		"function-disallowed-list": null,
+		"no-invalid-position-declaration": false
 	}
 }
