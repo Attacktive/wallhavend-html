@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Wallhavend</title>
+	<link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+	<div id="wallpaper-container" class="wallpaper-container">
+		<img id="wallpaper-image" src="image/default.svg" class="wallpaper-image" alt="Wallpaper" style="display: none;">
+	</div>
+
+	<div id="overlay" class="overlay hidden">
+		<div class="info-bar">
+			<span id="infoText"></span>
+			<a id="wallhaven-link" href="#" target="_blank">View on Wallhaven</a>
+		</div>
+	</div>
+
+	<div id="errorMessage" class="error-message hidden"></div>
+
+	<div id="loadingSpinner" class="loading-spinner hidden"></div>
+
+	<script src="script/config.js"></script>
+	<script src="script/wallpaper-manager.js"></script>
+	<script src="script/wallhavend-service.js"></script>
+	<script src="script/app.js" defer></script>
+</body>
+</html>
