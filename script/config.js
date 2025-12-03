@@ -23,3 +23,5 @@ const CONSTANTS = Object.freeze({
 	MAX_RETRIES: 3,
 	SEED_LENGTH: 6
 });
+
+export { CONFIG, CONSTANTS };

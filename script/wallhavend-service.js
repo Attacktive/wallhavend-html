@@ -1,3 +1,5 @@
+import { CONFIG, CONSTANTS } from './config.js';
+
 class WallhavendService {
 	constructor() {
 		this.urlToProxy = 'https://api.codetabs.com/v1/proxy/?quest=';
@@ -81,3 +83,5 @@ class WallhavendService {
 		return this.cachedWallpapers.shift();
 	}
 }
+
+export { WallhavendService };

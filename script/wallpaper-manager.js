@@ -1,3 +1,5 @@
+import { CONFIG, CONSTANTS } from './config.js';
+
 class WallpaperManager {
 	constructor(service) {
 		this.service = service;
@@ -139,3 +141,5 @@ class WallpaperManager {
 		this.errorMessage.classList.add('hidden');
 	}
 }
+
+export { WallpaperManager };
