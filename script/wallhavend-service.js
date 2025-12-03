@@ -61,7 +61,7 @@ class WallhavendService {
 		const urlToWallhaven = `${this.urlToWallhavenApi}?${params.toString()}`;
 		console.log('About to consume the Wallhaven API:', urlToWallhaven);
 
-		const url = `${this.urlToProxy}${encodeURI(urlToWallhaven)}`;
+		const url = `${this.urlToProxy}${encodeURIComponent(urlToWallhaven)}`;
 		console.log('About to send a request to the proxy', url);
 
 		const response = await fetch(url);
