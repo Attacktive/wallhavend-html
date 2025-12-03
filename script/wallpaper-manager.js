@@ -73,20 +73,50 @@ class WallpaperManager {
 		this.hideLoading();
 	}
 
-	displayWallpaper(wallpaper) {
+	/**
+	 * @typedef {Object} WallpaperResponse
+	 * @property {string} id
+	 * @property {string} url
+	 * @property {string} short_url
+	 * @property {string} path
+	 * @property {string} resolution
+	 * @property {string} ratio
+	 * @property {string} category
+	 * @property {string} purity
+	 */
+	/**
+	 *
+	 * @param {WallpaperResponse} wallpaper
+	 * @returns {Promise<unknown>}
+	 */
+	displayWallpaper({ id, url, path, resolution, category, purity }) {
 		return new Promise((resolve, reject) => {
-			this.wallpaperImage.onload = () => {
-				this.wallpaperImage.style.display = 'block';
-				this.infoText.textContent = `${wallpaper.id} | ${wallpaper.resolution} | ${wallpaper.category} | ${wallpaper.purity}`;
-				this.wallhavenLink.href = wallpaper.url;
+			const tempImage = new Image();
 
-				console.log(`Displaying: ID=${wallpaper.id}, Resolution=${wallpaper.resolution}`);
+			const cleanupTempImage = () => {
+				tempImage.onload = null;
+				tempImage.onerror = null;
+				tempImage.src = '';
+			};
+
+			tempImage.onload = () => {
+				this.wallpaperImage.src = path;
+				this.wallpaperImage.style.display = 'block';
+				this.infoText.textContent = `${id} | ${resolution} | ${category} | ${purity}`;
+				this.wallhavenLink.href = url;
+
+				console.log(`Displaying: ID=${id}, Resolution=${resolution}`);
+
+				cleanupTempImage();
 				resolve();
 			};
 
-			this.wallpaperImage.onerror = () => reject(new Error('Failed to load image'));
+			tempImage.onerror = () => {
+				cleanupTempImage();
+				reject(new Error('Failed to load image'));
+			};
 
-			this.wallpaperImage.src = wallpaper.path;
+			tempImage.src = path;
 		});
 	}
 
