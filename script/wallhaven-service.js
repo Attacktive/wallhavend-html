@@ -1,6 +1,6 @@
 import { CONFIG, CONSTANTS } from './config.js';
 
-class WallhavendService {
+class WallhavenService {
 	constructor() {
 		this.urlToProxy = 'https://api.codetabs.com/v1/proxy/?quest=';
 		this.urlToWallhavenApi = 'https://wallhaven.cc/api/v1/search';
@@ -84,4 +84,4 @@ class WallhavendService {
 	}
 }
 
-export { WallhavendService };
+export { WallhavenService };

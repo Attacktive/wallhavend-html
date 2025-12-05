@@ -1,5 +1,5 @@
-import { WallhavendService } from './wallhavend-service.js';
+import { WallhavenService } from './wallhaven-service.js';
 import { WallpaperManager } from './wallpaper-manager.js';
 
-const wallhavendService = new WallhavendService();
+const wallhavendService = new WallhavenService();
 new WallpaperManager(wallhavendService);
