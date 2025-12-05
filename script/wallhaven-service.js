@@ -1,4 +1,5 @@
-import { CONFIG, CONSTANTS } from './config.js';
+import { CONFIG } from './config.js';
+import { generateSeed, pickRandomElement } from './utils.js';
 
 class WallhavenService {
 	constructor() {
@@ -12,48 +13,23 @@ class WallhavenService {
 			return this.cachedWallpapers.shift();
 		}
 
-		return await this.fetchNewWallpapers();
+		const keyword = pickRandomElement(CONFIG.searchQuery.split(/\s*,\s*/));
+
+		return await this.fetchNewWallpapers(keyword);
 	}
 
 	/**
-	 * @param {string | unknown[]} source
-	 * @returns {string | unknown}
+	 * @param {string} keyword
+	 * @returns {Promise<WallpaperResponse[]>}
 	 */
-	pickRandomElement(source) {
-		return source[Math.floor(Math.random() * source.length)];
-	}
-
-	/**
-	 * @returns {string}
-	 */
-	generateQuery() {
-		const keywords = CONFIG.searchQuery.split(/\s*,\s*/);
-
-		return this.pickRandomElement(keywords);
-	}
-
-	/**
-	 * @returns {string}
-	 */
-	generateSeed() {
-		const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
-		let seed = '';
-		for (let i = 0; i < CONSTANTS.SEED_LENGTH; i++) {
-			seed += this.pickRandomElement(characters);
-		}
-
-		return seed;
-	}
-
-	async fetchNewWallpapers() {
+	async fetchNewWallpapers(keyword) {
 		const params = new URLSearchParams({
-			q: this.generateQuery(),
+			q: keyword,
 			categories: CONFIG.categories,
 			purity: CONFIG.purity,
 			ratios: CONFIG.ratios,
 			sorting: 'random',
-			seed: this.generateSeed()
+			seed: generateSeed()
 		});
 
 		if (CONFIG.apiKey) {

@@ -90,7 +90,9 @@ class WallpaperManager {
 				tempImage.src = '';
 			};
 
-			tempImage.onload = () => {
+			tempImage.onload = ({ target }) => {
+				console.debug('Succeeded to load image ', target);
+
 				this.wallpaperImage.src = path;
 				this.wallpaperImage.style.display = 'block';
 				this.infoText.textContent = `${id} | ${resolution} | ${category} | ${purity}`;
@@ -102,9 +104,11 @@ class WallpaperManager {
 				resolve();
 			};
 
-			tempImage.onerror = () => {
+			tempImage.onerror = (message, _source, _lineno, _colno, error) => {
+				console.error('Failed to load image', message, error);
+
 				cleanupTempImage();
-				reject(new Error('Failed to load image'));
+				reject(error);
 			};
 
 			tempImage.src = path;
