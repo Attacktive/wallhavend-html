@@ -16,10 +16,6 @@ class WallpaperManager {
 		this.loadingSpinner = document.getElementById('loadingSpinner');
 
 		this.applyScaling();
-
-		if (CONFIG.updateInterval > 0) {
-			this.startAutoUpdate();
-		}
 	}
 
 	applyScaling() {
@@ -31,6 +27,10 @@ class WallpaperManager {
 	}
 
 	async startAutoUpdate() {
+		if (CONFIG.updateInterval <= 0) {
+			throw new Error(`Provide a valid update interval instead of ${CONFIG.updateInterval}.`);
+		}
+
 		this.timer = setInterval(() => this.updateWallpaper(), CONFIG.updateInterval * 1000);
 
 		return await this.updateWallpaper();
@@ -120,7 +120,6 @@ class WallpaperManager {
 				}
 			);
 
-			console.debug('src', path);
 			tempImage.src = path;
 		});
 	}

@@ -16,7 +16,9 @@ const CONSTANTS = Object.freeze({
 	RETRY_DELAY_MS: 1000,
 	ERROR_DISPLAY_MS: 5000,
 	MAX_RETRIES: 3,
-	SEED_LENGTH: 6
+	SEED_LENGTH: 6,
+	PROXY_SERVER: 'https://api.codetabs.com/v1/proxy/',
+	WALLHAVEN_API_SERVER: 'https://wallhaven.cc/api/v1/search'
 });
 
 export { CONFIG, CONSTANTS };
