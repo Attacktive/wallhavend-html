@@ -1,9 +1,4 @@
 /**
- * @typedef {'000' | '001' | '010' | '011' | '100' | '101' | '110' | '111'} ThreeBitBinary
- * @typedef {'contain' | 'cover'} ImageScaling
- */
-
-/**
  * Refer to https://wallhaven.cc/help/api for the Wallhaven API
  * @type {{searchQuery: string, categories: ThreeBitBinary, purity: ThreeBitBinary, ratios?: string, apiKey?: string, updateInterval: number, scaling: ImageScaling}}
  */

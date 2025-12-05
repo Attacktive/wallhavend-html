@@ -76,17 +76,6 @@ class WallpaperManager {
 	}
 
 	/**
-	 * @typedef {Object} WallpaperResponse
-	 * @property {string} id
-	 * @property {string} url
-	 * @property {string} short_url
-	 * @property {string} path
-	 * @property {string} resolution
-	 * @property {string} ratio
-	 * @property {string} category
-	 * @property {string} purity
-	 */
-	/**
 	 *
 	 * @param {WallpaperResponse} wallpaper
 	 * @returns {Promise<unknown>}
