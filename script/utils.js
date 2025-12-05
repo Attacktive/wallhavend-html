@@ -34,4 +34,18 @@ function generateSeed() {
 	return seed;
 }
 
-export { pickRandomElement, shuffleArray, generateSeed };
+/**
+ * @param {string} destination
+ */
+function getProxiedUrl(destination) {
+	console.debug(`getProxiedUrl(${destination})`);
+
+	const encodedDestination = encodeURIComponent(destination);
+	const proxiedUrl = `${CONSTANTS.PROXY_SERVER}?quest=${encodedDestination}`;
+
+	console.debug('proxied url', proxiedUrl);
+
+	return proxiedUrl;
+}
+
+export { pickRandomElement, shuffleArray, generateSeed, getProxiedUrl };

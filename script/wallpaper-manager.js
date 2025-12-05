@@ -62,7 +62,7 @@ class WallpaperManager {
 				console.error(`Attempt ${attempt} failed:`, error);
 
 				if (attempt >= maxRetries) {
-					this.showError(error.message);
+					this.showError(error);
 					console.error('Failed to update wallpaper after retries:', error);
 				} else {
 					console.log(`Retrying... (${attempt}/${maxRetries})`);
@@ -82,35 +82,45 @@ class WallpaperManager {
 	 */
 	displayWallpaper({ id, url, path, resolution, category, purity }) {
 		return new Promise((resolve, reject) => {
-			const tempImage = new Image();
+			let tempImage = new Image();
 
 			const cleanupTempImage = () => {
+				console.debug('cleanupTempImage');
 				tempImage.onload = null;
 				tempImage.onerror = null;
-				tempImage.src = '';
+				tempImage = null;
 			};
 
-			tempImage.onload = ({ target }) => {
-				console.debug('Succeeded to load image ', target);
+			tempImage.addEventListener(
+				'load',
+				({ target }) => {
+					console.debug('Succeeded to load image ', target);
 
-				this.wallpaperImage.src = path;
-				this.wallpaperImage.style.display = 'block';
-				this.infoText.textContent = `${id} | ${resolution} | ${category} | ${purity}`;
-				this.wallhavenLink.href = url;
+					this.wallpaperImage.src = path;
+					this.wallpaperImage.style.display = 'block';
+					this.infoText.textContent = `${id} | ${resolution} | ${category} | ${purity}`;
+					this.wallhavenLink.href = url;
 
-				console.log(`Displaying: ID=${id}, Resolution=${resolution}`);
+					console.log(`Displaying: ID=${id}, Resolution=${resolution}`);
 
-				cleanupTempImage();
-				resolve();
-			};
+					cleanupTempImage();
+					resolve();
+				}
+			);
 
-			tempImage.onerror = (message, _source, _lineno, _colno, error) => {
-				console.error('Failed to load image', message, error);
+			tempImage.addEventListener(
+				'error',
+				(errorEvent) => {
+					console.error('Failed to load image', errorEvent);
 
-				cleanupTempImage();
-				reject(error);
-			};
+					cleanupTempImage();
 
+					const error = errorEvent.error ?? new Error('Failed to load image for an unknown reason! 💀');
+					reject(error);
+				}
+			);
+
+			console.debug('src', path);
 			tempImage.src = path;
 		});
 	}

@@ -1,10 +1,8 @@
-import { CONFIG } from './config.js';
-import { generateSeed, pickRandomElement } from './utils.js';
+import { CONFIG, CONSTANTS } from './config.js';
+import { generateSeed, getProxiedUrl, pickRandomElement } from './utils.js';
 
 class WallhavenService {
 	constructor() {
-		this.urlToProxy = 'https://api.codetabs.com/v1/proxy/?quest=';
-		this.urlToWallhavenApi = 'https://wallhaven.cc/api/v1/search';
 		this.cachedWallpapers = [];
 	}
 
@@ -36,11 +34,8 @@ class WallhavenService {
 			params.append('apikey', CONFIG.apiKey);
 		}
 
-		const urlToWallhaven = `${this.urlToWallhavenApi}?${params.toString()}`;
-		console.log('About to consume the Wallhaven API:', urlToWallhaven);
-
-		const url = `${this.urlToProxy}${encodeURIComponent(urlToWallhaven)}`;
-		console.log('About to send a request to the proxy', url);
+		const urlToWallhaven = `${CONSTANTS.WALLHAVEN_API_SERVER}?${params.toString()}`;
+		const url = getProxiedUrl(urlToWallhaven);
 
 		const response = await fetch(url);
 		if (!response.ok) {
