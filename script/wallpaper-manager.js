@@ -53,9 +53,10 @@ class WallpaperManager {
 			try {
 				this.ui.showLoading();
 				const wallpaper = await this.service.fetchRandomWallpaper();
-				this.ui.hideLoading();
+
 				this.currentWallpaper = wallpaper;
 				await this.displayWallpaper(wallpaper);
+
 				break;
 			} catch (error) {
 				attempt++;
@@ -70,14 +71,12 @@ class WallpaperManager {
 				}
 			} finally {
 				this.ui.hideLoading();
+				this.isLoading = false;
 			}
 		}
-
-		this.isLoading = false;
 	}
 
 	/**
-	 *
 	 * @param {WallpaperResponse} wallpaper
 	 * @returns {Promise<unknown>}
 	 */

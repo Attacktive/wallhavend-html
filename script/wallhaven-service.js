@@ -1,5 +1,5 @@
 import { CONFIG, CONSTANTS } from './config.js';
-import { generateSeed, getProxiedUrl, pickRandomElement } from './utils.js';
+import { generateSeed, getProxiedUrl, shuffleArray } from './utils.js';
 
 class WallhavenService {
 	constructor() {
@@ -11,16 +11,51 @@ class WallhavenService {
 			return this.cachedWallpapers.shift();
 		}
 
-		const keyword = pickRandomElement(CONFIG.searchQuery.split(/\s*,\s*/));
+		const keywords = CONFIG.searchQuery.split(/\s*,\s*/);
 
-		return await this.fetchNewWallpapers(keyword);
+		return await this.fetchWallpapersFromAllKeywords(keywords);
 	}
 
 	/**
+	 * Fetch wallpapers from all keywords simultaneously and merge results
+	 * @param {string[]} keywords
+	 * @returns {Promise<WallpaperResponse>}
+	 */
+	async fetchWallpapersFromAllKeywords(keywords) {
+		let wallpapers = [];
+
+		try {
+			const wallpaperPromises = keywords
+				.map(keyword => keyword.trim())
+				.map(keyword => this.fetchWallpapersForKeyword(keyword));
+
+			const responses = await Promise.allSettled(wallpaperPromises);
+
+			wallpapers = responses
+				.map(({ value }) => value)
+				.filter(({ length }) => length > 0)
+				.flatMap(wallpaper => wallpaper);
+		} catch (error) {
+			console.error('Error fetching wallpapers from all keywords:', error);
+			throw error;
+		}
+
+		if (wallpapers.length === 0) {
+			throw new Error('No wallpapers found for any of the keywords');
+		}
+
+		this.cachedWallpapers = shuffleArray(wallpapers);
+		console.log(`Total wallpapers fetched from all keywords: ${this.cachedWallpapers.length}`);
+
+		return this.cachedWallpapers.shift();
+	}
+
+	/**
+	 * Fetch wallpapers for a single keyword
 	 * @param {string} keyword
 	 * @returns {Promise<WallpaperResponse[]>}
 	 */
-	async fetchNewWallpapers(keyword) {
+	async fetchWallpapersForKeyword(keyword) {
 		const params = new URLSearchParams({
 			q: keyword,
 			categories: CONFIG.categories,
@@ -39,19 +74,12 @@ class WallhavenService {
 
 		const response = await fetch(url);
 		if (!response.ok) {
-			throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+			throw new Error(`API request failed for keyword "${keyword}": ${response.status} ${response.statusText}`);
 		}
 
 		const { data } = await response.json();
 
-		if (!data?.length) {
-			throw new Error('No wallpapers found matching your criteria');
-		}
-
-		this.cachedWallpapers = data;
-		console.log(`Fetched ${this.cachedWallpapers.length} wallpapers`);
-
-		return this.cachedWallpapers.shift();
+		return data;
 	}
 }
 
