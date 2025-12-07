@@ -1,4 +1,5 @@
 import { CONFIG, CONSTANTS } from './config.js';
+import { UIController } from './ui-controller.js';
 
 class WallpaperManager {
 	constructor(service) {
@@ -11,11 +12,7 @@ class WallpaperManager {
 		this.wallpaperImage1 = document.getElementById('wallpaper-image-1');
 		this.wallpaperImage2 = document.getElementById('wallpaper-image-2');
 		this.usingFirstImage = true;
-		this.overlay = document.getElementById('overlay');
-		this.infoText = document.getElementById('infoText');
-		this.wallhavenLink = document.getElementById('wallhaven-link');
-		this.errorMessage = document.getElementById('error-message');
-		this.loadingSpinner = document.getElementById('loading-spinner');
+		this.ui = new UIController();
 
 		this.applyScaling();
 	}
@@ -44,7 +41,7 @@ class WallpaperManager {
 		}
 
 		this.isLoading = true;
-		this.hideError();
+		this.ui.hideError();
 
 		let maxRetries = 1;
 		if (!this.currentWallpaper) {
@@ -54,9 +51,9 @@ class WallpaperManager {
 		let attempt = 0;
 		while (attempt < maxRetries) {
 			try {
-				this.showLoading();
+				this.ui.showLoading();
 				const wallpaper = await this.service.fetchRandomWallpaper();
-				this.hideLoading();
+				this.ui.hideLoading();
 				this.currentWallpaper = wallpaper;
 				await this.displayWallpaper(wallpaper);
 				break;
@@ -65,14 +62,14 @@ class WallpaperManager {
 				console.error(`Attempt ${attempt} failed:`, error);
 
 				if (attempt >= maxRetries) {
-					this.showError(error);
+					this.ui.showError(error);
 					console.error('Failed to update wallpaper after retries:', error);
 				} else {
 					console.log(`Retrying... (${attempt}/${maxRetries})`);
 					await new Promise(resolve => setTimeout(resolve, CONSTANTS.RETRY_DELAY_MS));
 				}
 			} finally {
-				this.hideLoading();
+				this.ui.hideLoading();
 			}
 		}
 
@@ -131,8 +128,7 @@ class WallpaperManager {
 
 					this.usingFirstImage = !this.usingFirstImage;
 
-					this.infoText.textContent = `${id} | ${resolution} | ${category} | ${purity}`;
-					this.wallhavenLink.href = url;
+					this.ui.updateWallpaperInfo({ id, url, resolution, category, purity });
 
 					console.log(`Displaying: ID=${id}, Resolution=${resolution}`);
 
@@ -157,24 +153,6 @@ class WallpaperManager {
 		});
 	}
 
-	showLoading() {
-		this.loadingSpinner.classList.remove('hidden');
-	}
-
-	hideLoading() {
-		this.loadingSpinner.classList.add('hidden');
-	}
-
-	showError(message) {
-		this.errorMessage.textContent = message;
-		this.errorMessage.classList.remove('hidden');
-
-		setTimeout(() => this.hideError(), CONSTANTS.ERROR_DISPLAY_MS);
-	}
-
-	hideError() {
-		this.errorMessage.classList.add('hidden');
-	}
 }
 
 export { WallpaperManager };
