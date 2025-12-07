@@ -44,7 +44,6 @@ class WallpaperManager {
 		}
 
 		this.isLoading = true;
-		this.showLoading();
 		this.hideError();
 
 		let maxRetries = 1;
@@ -55,7 +54,9 @@ class WallpaperManager {
 		let attempt = 0;
 		while (attempt < maxRetries) {
 			try {
+				this.showLoading();
 				const wallpaper = await this.service.fetchRandomWallpaper();
+				this.hideLoading();
 				this.currentWallpaper = wallpaper;
 				await this.displayWallpaper(wallpaper);
 				break;
@@ -70,11 +71,12 @@ class WallpaperManager {
 					console.log(`Retrying... (${attempt}/${maxRetries})`);
 					await new Promise(resolve => setTimeout(resolve, CONSTANTS.RETRY_DELAY_MS));
 				}
+			} finally {
+				this.hideLoading();
 			}
 		}
 
 		this.isLoading = false;
-		this.hideLoading();
 	}
 
 	/**
