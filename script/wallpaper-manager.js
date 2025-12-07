@@ -8,7 +8,9 @@ class WallpaperManager {
 		this.isLoading = false;
 
 		this.container = document.getElementById('wallpaper-container');
-		this.wallpaperImage = document.getElementById('wallpaper-image');
+		this.wallpaperImage1 = document.getElementById('wallpaper-image-1');
+		this.wallpaperImage2 = document.getElementById('wallpaper-image-2');
+		this.usingFirstImage = true;
 		this.overlay = document.getElementById('overlay');
 		this.infoText = document.getElementById('infoText');
 		this.wallhavenLink = document.getElementById('wallhaven-link');
@@ -96,8 +98,37 @@ class WallpaperManager {
 				({ target }) => {
 					console.debug('Succeeded to load image ', target);
 
-					this.wallpaperImage.src = path;
-					this.wallpaperImage.style.display = 'block';
+					let currentImage;
+					let nextImage;
+					if (this.usingFirstImage) {
+						currentImage = this.wallpaperImage1;
+						nextImage = this.wallpaperImage2;
+					} else {
+						currentImage = this.wallpaperImage2;
+						nextImage = this.wallpaperImage1;
+					}
+
+					nextImage.src = path;
+
+					if (!this.currentWallpaper || currentImage.src === 'image/default.svg') {
+						nextImage.classList.add('active');
+						currentImage.classList.remove('active');
+					} else {
+						currentImage.classList.add('fading-out');
+						nextImage.classList.add('fading-in');
+
+						setTimeout(
+							() => {
+								currentImage.classList.remove('fading-out', 'active');
+								nextImage.classList.remove('fading-in');
+								nextImage.classList.add('active');
+							},
+							1600
+						);
+					}
+
+					this.usingFirstImage = !this.usingFirstImage;
+
 					this.infoText.textContent = `${id} | ${resolution} | ${category} | ${purity}`;
 					this.wallhavenLink.href = url;
 

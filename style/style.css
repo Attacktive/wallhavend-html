@@ -39,6 +39,10 @@ html, body {
 	height: 100%;
 	object-fit: contain;
 	object-position: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	opacity: 0;
 }
 
 #wallpaper-container.cover .wallpaper-image {
@@ -118,6 +122,36 @@ html, body {
 
 .loading-spinner.hidden {
 	display: none;
+}
+
+@keyframes fadeOut {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.wallpaper-image.fading-out {
+	animation: fadeOut 1600ms ease forwards;
+}
+
+.wallpaper-image.fading-in {
+	animation: fadeIn 1600ms ease forwards;
+}
+
+.wallpaper-image.active {
+	opacity: 1;
 }
 
 @keyframes spin {
