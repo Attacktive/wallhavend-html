@@ -52,7 +52,7 @@ class WallpaperManager {
 		while (attempt < maxRetries) {
 			try {
 				this.ui.showLoading();
-				const wallpaper = await this.service.fetchRandomWallpaper();
+/				const wallpaper = await this.service.updateWallpaper();
 
 				this.currentWallpaper = wallpaper;
 				await this.displayWallpaper(wallpaper);

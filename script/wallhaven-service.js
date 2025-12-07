@@ -6,22 +6,21 @@ class WallhavenService {
 		this.cachedWallpapers = [];
 	}
 
-	async fetchRandomWallpaper() {
+	async updateWallpaper() {
 		if (this.cachedWallpapers.length > 0) {
 			return this.cachedWallpapers.shift();
 		}
 
-		const keywords = CONFIG.searchQuery.split(/\s*,\s*/);
-
-		return await this.fetchWallpapersFromAllKeywords(keywords);
+		return await this.fetchWallpapers();
 	}
 
 	/**
 	 * Fetch wallpapers from all keywords simultaneously and merge results
-	 * @param {string[]} keywords
 	 * @returns {Promise<WallpaperResponse>}
 	 */
-	async fetchWallpapersFromAllKeywords(keywords) {
+	async fetchWallpapers() {
+		const keywords = CONFIG.searchQuery.split(/\s*,\s*/);
+
 		let wallpapers = [];
 
 		try {
