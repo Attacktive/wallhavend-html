@@ -14,8 +14,8 @@ class WallpaperManager {
 		this.overlay = document.getElementById('overlay');
 		this.infoText = document.getElementById('infoText');
 		this.wallhavenLink = document.getElementById('wallhaven-link');
-		this.errorMessage = document.getElementById('errorMessage');
-		this.loadingSpinner = document.getElementById('loadingSpinner');
+		this.errorMessage = document.getElementById('error-message');
+		this.loadingSpinner = document.getElementById('loading-spinner');
 
 		this.applyScaling();
 	}
