@@ -113,8 +113,18 @@ html, body {
 	z-index: 100;
 }
 
+@keyframes spin {
+	to {
+		transform: translate(-50%, -50%) rotate(360deg);
+	}
+}
+
 .loading-spinner.hidden {
 	display: none;
+}
+
+.wallpaper-image.fading-out {
+	animation: fade-out 1600ms ease forwards;
 }
 
 @keyframes fade-out {
@@ -127,6 +137,10 @@ html, body {
 	}
 }
 
+.wallpaper-image.fading-in {
+	animation: fade-in 1600ms ease forwards;
+}
+
 @keyframes fade-in {
 	from {
 		opacity: 0;
@@ -137,20 +151,6 @@ html, body {
 	}
 }
 
-.wallpaper-image.fading-out {
-	animation: fade-out 1600ms ease forwards;
-}
-
-.wallpaper-image.fading-in {
-	animation: fade-in 1600ms ease forwards;
-}
-
 .wallpaper-image.active {
 	opacity: 1;
-}
-
-@keyframes spin {
-	to {
-		transform: translate(-50%, -50%) rotate(360deg);
-	}
 }
