@@ -49,13 +49,6 @@ html, body {
 	object-fit: cover;
 }
 
-.placeholder {
-	color: var(--text-secondary);
-	font-size: 1.2rem;
-	text-align: center;
-	padding: 20px;
-}
-
 .overlay {
 	position: fixed;
 	bottom: 0;
