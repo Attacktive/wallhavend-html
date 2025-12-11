@@ -138,11 +138,11 @@ html, body {
 }
 
 .wallpaper-image.fading-out {
-	animation: fadeOut 1600ms ease forwards;
+	animation: fade-out 1600ms ease forwards;
 }
 
 .wallpaper-image.fading-in {
-	animation: fadeIn 1600ms ease forwards;
+	animation: fade-in 1600ms ease forwards;
 }
 
 .wallpaper-image.active {
