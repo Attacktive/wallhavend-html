@@ -50,13 +50,12 @@ class WallhavenService {
 	 */
 	async fetchWallpapersForKeyword(keyword) {
 		const effectiveSettings = settings.getEffectiveSettings();
+		let { q, seed } = effectiveSettings;
 
-		let q = effectiveSettings.q;
 		if (!q) {
 			q = keyword;
 		}
 
-		let seed = effectiveSettings.seed;
 		if (!seed) {
 			seed = generateSeed();
 		}
