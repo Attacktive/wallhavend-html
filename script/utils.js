@@ -1,4 +1,4 @@
-import { CONSTANTS } from './config.js';
+import { settings } from './settings.js';
 
 /**
  * @template T
@@ -26,13 +26,13 @@ function shuffleArray(array) {
 }
 
 /**
- * @returns {string} Seed for Wannhaven API that matches <code>[a-zA-z0-9]{6}</code>
+ * @returns {string} Seed for Wallhaven API that matches <code>[a-zA-z0-9]{6}</code>
  */
 function generateSeed() {
 	const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 	let seed = '';
-	for (let i = 0; i < CONSTANTS.SEED_LENGTH; i++) {
+	for (let i = 0; i < settings.getSeedLength(); i++) {
 		seed += pickRandomElement(characters);
 	}
 
@@ -46,7 +46,7 @@ function getProxiedUrl(destination) {
 	console.debug(`getProxiedUrl(${destination})`);
 
 	const encodedDestination = encodeURIComponent(destination);
-	const proxiedUrl = `${CONSTANTS.PROXY_SERVER}?quest=${encodedDestination}`;
+	const proxiedUrl = `${settings.getProxyServer()}?quest=${encodedDestination}`;
 
 	console.debug('proxied url', proxiedUrl);
 

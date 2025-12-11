@@ -1,4 +1,4 @@
-import { CONSTANTS } from './config.js';
+import { settings } from './settings.js';
 
 class UIController {
 	constructor() {
@@ -21,7 +21,7 @@ class UIController {
 		this.errorMessage.textContent = message;
 		this.errorMessage.classList.remove('hidden');
 
-		setTimeout(() => this.hideError(), CONSTANTS.ERROR_DISPLAY_MS);
+		setTimeout(() => this.hideError(), settings.getDelayToDisplayError());
 	}
 
 	hideError() {

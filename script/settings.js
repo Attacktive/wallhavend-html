@@ -1,0 +1,102 @@
+class Settings {
+	static #CONSTANTS = {
+		DELAY_TO_DISPLAY_ERROR: 5000,
+		DELAY_TO_RETRY: 1000,
+		MAX_RETRIES: 3,
+		SEED_LENGTH: 6,
+		PROXY_SERVER: 'https://api.codetabs.com/v1/proxy/',
+		WALLHAVEN_API_SERVER: 'https://wallhaven.cc/api/v1/search',
+		DEFAULT_KEYWORDS: 'landscape, autumn, winter, nature',
+		DEFAULT_WALLPAPER_DURATION: 60_000,
+		DEFAULT_SCALING: 'contain'
+	};
+
+	/**
+	 * Refer to https://wallhaven.cc/help/api for the Wallhaven API
+	 * @type {Partial<WallhavenParameters>}
+	 */
+	static #DEFAULT_SETTINGS = {
+		categories: '100',
+		purity: '100',
+		sorting: 'random',
+		ratios: '16x9'
+	};
+
+	/**
+	 * @type {ClientParameters}
+	 */
+	#rawParameters;
+
+	constructor() {
+		const urlParams = new URLSearchParams(location.search);
+		this.#rawParameters = Object.fromEntries(urlParams);
+	}
+
+	/**
+	 * @returns {WallhavendSettings}
+	 */
+	#getWallhavendSettings() {
+		console.debug('[getWallhavendSettings] from parameters from end user', this.#rawParameters);
+
+		const { searchQuery, updateInterval, scaling } = this.#rawParameters;
+
+		return { searchQuery, updateInterval, scaling };
+	}
+
+	/**
+	 * @returns {WallhavenParameters}
+	 */
+	getEffectiveSettings() {
+		console.debug('[getEffectiveSettings] from parameters from end user', this.#rawParameters);
+
+		const { categories, purity, sorting, ratios } = Settings.#DEFAULT_SETTINGS;
+
+		return {
+			categories,
+			purity,
+			sorting,
+			ratios,
+			...this.#rawParameters
+		};
+	}
+
+	getSearchQuery() {
+		return this.#getWallhavendSettings().searchQuery ?? Settings.#CONSTANTS.DEFAULT_KEYWORDS;
+	}
+
+	getUpdateInterval() {
+		return this.#getWallhavendSettings().updateInterval ?? Settings.#CONSTANTS.DEFAULT_WALLPAPER_DURATION;
+	}
+
+	getScaling() {
+		return this.#getWallhavendSettings().scaling ?? Settings.#CONSTANTS.DEFAULT_SCALING;
+	}
+
+	getDelayToDisplayError() {
+		return Settings.#CONSTANTS.DELAY_TO_DISPLAY_ERROR;
+	}
+
+	getDelayToRetry() {
+		return Settings.#CONSTANTS.DELAY_TO_RETRY;
+	}
+
+	getMaxRetries() {
+		return Settings.#CONSTANTS.MAX_RETRIES;
+	}
+
+	getSeedLength() {
+		return Settings.#CONSTANTS.SEED_LENGTH;
+	}
+
+	getProxyServer() {
+		return Settings.#CONSTANTS.PROXY_SERVER;
+	}
+
+	getWallhavenApiServer() {
+		return Settings.#CONSTANTS.WALLHAVEN_API_SERVER;
+	}
+}
+
+const settings = new Settings();
+
+export { settings };

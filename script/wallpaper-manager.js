@@ -1,4 +1,4 @@
-import { CONFIG, CONSTANTS } from './config.js';
+import { settings } from './settings.js';
 import { UIController } from './ui-controller.js';
 
 class WallpaperManager {
@@ -18,7 +18,7 @@ class WallpaperManager {
 	}
 
 	applyScaling() {
-		if (CONFIG.scaling === 'cover') {
+		if (settings.getScaling() === 'cover') {
 			this.container.classList.add('cover');
 		} else {
 			this.container.classList.remove('cover');
@@ -26,11 +26,13 @@ class WallpaperManager {
 	}
 
 	async startAutoUpdate() {
-		if (CONFIG.updateInterval <= 0) {
-			throw new Error(`Provide a valid update interval instead of ${CONFIG.updateInterval}.`);
+		const updateInterval = settings.getUpdateInterval();
+
+		if (updateInterval <= 0) {
+			throw new Error(`Provide a valid update interval instead of ${updateInterval}.`);
 		}
 
-		this.timer = setInterval(() => this.updateWallpaper(), CONFIG.updateInterval * 1000);
+		this.timer = setInterval(() => this.updateWallpaper(), updateInterval);
 
 		return await this.updateWallpaper();
 	}
@@ -45,7 +47,7 @@ class WallpaperManager {
 
 		let maxRetries = 1;
 		if (!this.currentWallpaper) {
-			maxRetries = CONSTANTS.MAX_RETRIES;
+			maxRetries = settings.getMaxRetries();
 		}
 
 		let attempt = 0;
@@ -67,7 +69,7 @@ class WallpaperManager {
 					console.error('Failed to update wallpaper after retries:', error);
 				} else {
 					console.log(`Retrying... (${attempt}/${maxRetries})`);
-					await new Promise(resolve => setTimeout(resolve, CONSTANTS.RETRY_DELAY_MS));
+					await new Promise(resolve => setTimeout(resolve, settings.getDelayToRetry()));
 				}
 			} finally {
 				this.ui.hideLoading();
