@@ -80,7 +80,7 @@ class WallpaperManager {
 
 	/**
 	 * @param {WallpaperResponse} wallpaper
-	 * @returns {Promise<unknown>}
+	 * @returns {Promise<void>}
 	 */
 	displayWallpaper({ id, url, path, resolution, category, purity }) {
 		return new Promise((resolve, reject) => {
@@ -153,7 +153,6 @@ class WallpaperManager {
 			tempImage.src = path;
 		});
 	}
-
 }
 
 export { WallpaperManager };

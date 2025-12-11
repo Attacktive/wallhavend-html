@@ -3,9 +3,15 @@ import { generateSeed, getProxiedUrl, shuffleArray } from './utils.js';
 
 class WallhavenService {
 	constructor() {
+		/**
+		 * @type {WallpaperResponse[]}
+		 */
 		this.cachedWallpapers = [];
 	}
 
+	/**
+	 * @returns {Promise<WallpaperResponse>}
+	 */
 	async updateWallpaper() {
 		if (this.cachedWallpapers.length > 0) {
 			return this.cachedWallpapers.shift();
@@ -27,6 +33,9 @@ class WallhavenService {
 
 		const responses = await Promise.allSettled(wallpaperPromises);
 
+		/**
+		 * @type {WallpaperResponse[]}
+		 */
 		const wallpapers = responses
 			.filter(({ status }) => status === 'fulfilled')
 			.map(({ value }) => value)

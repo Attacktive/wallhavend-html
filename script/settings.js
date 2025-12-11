@@ -44,7 +44,7 @@ class Settings {
 	}
 
 	/**
-	 * @returns {WallhavenParameters}
+	 * @returns {WallhavenParameters} the default settings plus user overridess
 	 */
 	getEffectiveSettings() {
 		console.debug('[getEffectiveSettings] from parameters from end user', this.#rawParameters);
@@ -60,14 +60,23 @@ class Settings {
 		};
 	}
 
+	/**
+	 * @returns {string}
+	 */
 	getSearchQuery() {
 		return this.#getWallhavendSettings().searchQuery ?? Settings.#CONSTANTS.DEFAULT_KEYWORDS;
 	}
 
+	/**
+	 * @returns {number}
+	 */
 	getUpdateInterval() {
 		return this.#getWallhavendSettings().updateInterval ?? Settings.#CONSTANTS.DEFAULT_WALLPAPER_DURATION;
 	}
 
+	/**
+	 * @returns {ImageScaling}
+	 */
 	getScaling() {
 		return this.#getWallhavendSettings().scaling ?? Settings.#CONSTANTS.DEFAULT_SCALING;
 	}
