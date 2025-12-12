@@ -9,19 +9,21 @@
 </head>
 <body>
 	<div id="wallpaper-container">
-		<img id="wallpaper-image-1" src="image/default.svg" class="wallpaper-image active" alt="Wallpaper">
-		<img id="wallpaper-image-2" src="image/default.svg" class="wallpaper-image" alt="Wallpaper">
+		<img id="wallpaper-image-1" src="image/default.svg" class="wallpaper-image active" alt="Wallpaper 1">
+		<img id="wallpaper-image-2" src="image/default.svg" class="wallpaper-image" alt="Wallpaper 2">
 	</div>
 
-	<div id="overlay" class="overlay hidden">
+	<div id="overlay" class="overlay">
 		<div class="info-bar">
-			<span id="infoText"></span>
-			<a id="wallhaven-link" href="#" target="_blank">View on Wallhaven</a>
+			<span id="info-text"></span>
+			<div id="debug-panel" class="hidden">
+				<textarea id="debug-text" readonly></textarea>
+			</div>
+			<a id="wallhaven-link" href="javascript:void(0);" target="_blank">View on Wallhaven</a>
 		</div>
 	</div>
 
 	<div id="error-message" class="error-message hidden"></div>
-
 	<div id="loading-spinner" class="loading-spinner hidden"></div>
 
 	<script type="module" src="script/app.js"></script>

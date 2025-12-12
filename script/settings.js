@@ -8,7 +8,9 @@ class Settings {
 		WALLHAVEN_API_SERVER: 'https://wallhaven.cc/api/v1/search',
 		DEFAULT_KEYWORDS: 'landscape, autumn, winter, nature',
 		DEFAULT_WALLPAPER_DURATION: 60_000,
-		DEFAULT_SCALING: 'contain'
+		DEFAULT_SCALING: 'contain',
+		DEFAULT_SHOW_OVERLAY: true,
+		DEFAULT_DEBUG: false
 	};
 
 	/**
@@ -38,9 +40,9 @@ class Settings {
 	#getWallhavendSettings() {
 		console.debug('[getWallhavendSettings] from parameters from end user', this.#rawParameters);
 
-		const { searchQuery, updateInterval, scaling } = this.#rawParameters;
+		const { searchQuery, updateInterval, scaling, showOverlay, debug } = this.#rawParameters;
 
-		return { searchQuery, updateInterval, scaling };
+		return { searchQuery, updateInterval, scaling, showOverlay, debug };
 	}
 
 	/**
@@ -79,6 +81,20 @@ class Settings {
 	 */
 	getScaling() {
 		return this.#getWallhavendSettings().scaling ?? Settings.#CONSTANTS.DEFAULT_SCALING;
+	}
+
+	/**
+	 * @returns {boolean}
+	 */
+	toShowOverlay() {
+		return this.#getWallhavendSettings().showOverlay ?? Settings.#CONSTANTS.DEFAULT_SHOW_OVERLAY;
+	}
+
+	/**
+	 * @returns {boolean}
+	 */
+	toDebug() {
+		return this.#getWallhavendSettings().debug ?? Settings.#CONSTANTS.DEFAULT_DEBUG;
 	}
 
 	getDelayToDisplayError() {

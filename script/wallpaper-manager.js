@@ -62,7 +62,9 @@ class WallpaperManager {
 				break;
 			} catch (error) {
 				attempt++;
+
 				console.error(`Attempt ${attempt} failed:`, error);
+				this.ui.setDebugText(error);
 
 				if (attempt >= maxRetries) {
 					this.ui.showError(error);
