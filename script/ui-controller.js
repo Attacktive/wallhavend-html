@@ -1,4 +1,5 @@
 import { settings } from './settings.js';
+import { copyToClipboard } from './utils.js';
 
 class UIController {
 	constructor() {
@@ -92,7 +93,7 @@ class UIController {
 
 		this.onClickLink = async () => {
 			try {
-				await navigator.clipboard.writeText(url);
+				await copyToClipboard(url);
 				this.showToast('Link copied to clipboard!');
 			} catch (error) {
 				this.showErrorToast('Failed to copy link');
