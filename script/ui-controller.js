@@ -84,6 +84,7 @@ class UIController {
 	 */
 	updateWallpaperInfo({ id, url, resolution, category, purity }) {
 		this.infoText.textContent = `${id} | ${resolution} | ${category} | ${purity}`;
+		this.wallhavenLink.textContent = url;
 
 		if (this.onClickLink !== null) {
 			this.wallhavenLink.removeEventListener('click', this.onClickLink);
