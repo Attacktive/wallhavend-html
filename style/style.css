@@ -72,8 +72,13 @@ html, body {
 	font-size: 0.9rem;
 }
 
-.info-bar a {
+.info-bar button {
+	background: none;
+	border: none;
 	color: var(--accent);
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
 	text-decoration: none;
 }
 
@@ -120,6 +125,32 @@ html, body {
 
 .loading-spinner.hidden {
 	display: none;
+}
+
+.toast-message {
+	position: fixed;
+	bottom: 70px;
+	right: 20px;
+	background: rgb(76 175 80 / 90%);
+	color: white;
+	padding: 8px 16px;
+	border-radius: 6px;
+	font-size: 0.85rem;
+	z-index: 100;
+	transform: translateY(100%);
+	transition: transform 0.3s ease;
+}
+
+.toast-message.shown {
+	transform: translateY(0);
+}
+
+.toast-message.hidden {
+	display: none;
+}
+
+.toast-message.error {
+	background: rgb(255 152 0 / 90%);
 }
 
 .wallpaper-image.fading-out {
