@@ -63,6 +63,10 @@ html, body {
 	pointer-events: none;
 }
 
+#debug-panel.hidden {
+	display: none;
+}
+
 .info-bar {
 	display: flex;
 	justify-content: space-between;
