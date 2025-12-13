@@ -14,7 +14,7 @@ class WallpaperManager {
 		this.usingFirstImage = true;
 
 		initializeUI();
-		setNextWallpaperCallback(this.nextWallpaper);
+		setNextWallpaperCallback(() => this.nextWallpaper());
 
 		this.applyScaling();
 	}
