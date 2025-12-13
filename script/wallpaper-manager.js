@@ -108,7 +108,6 @@ class WallpaperManager {
 			let tempImage = new Image();
 
 			const cleanupTempImage = () => {
-				console.debug('cleanupTempImage');
 				tempImage.onload = null;
 				tempImage.onerror = null;
 				tempImage = null;
@@ -116,9 +115,7 @@ class WallpaperManager {
 
 			tempImage.addEventListener(
 				'load',
-				({ target }) => {
-					console.debug('Succeeded to load image ', target);
-
+				() => {
 					let currentImage;
 					let nextImage;
 					if (this.usingFirstImage) {
@@ -152,7 +149,7 @@ class WallpaperManager {
 
 					updateWallpaperInfo(wallpaper);
 
-					console.log(`Displaying: ID=${id}, Resolution=${resolution}`);
+					console.debug(`Displaying: ID=${id}, Resolution=${resolution}`);
 
 					cleanupTempImage();
 					resolve();
