@@ -151,6 +151,7 @@ class WallhavenService {
 		for (const blobUrl of this.imageCache.values()) {
 			URL.revokeObjectURL(blobUrl);
 		}
+
 		this.imageCache.clear();
 	}
 }
