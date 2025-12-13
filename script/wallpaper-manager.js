@@ -101,7 +101,8 @@ class WallpaperManager {
 	 * @returns {Promise<void>}
 	 */
 	displayWallpaper(wallpaper) {
-		const { id, path, resolution } = wallpaper;
+		const { id, resolution } = wallpaper;
+		const imagePath = this.service.getCachedImageUrl(wallpaper);
 
 		return new Promise((resolve, reject) => {
 			let tempImage = new Image();
@@ -128,7 +129,7 @@ class WallpaperManager {
 						nextImage = this.wallpaperImage1;
 					}
 
-					nextImage.src = path;
+					nextImage.src = imagePath;
 
 					if (!this.currentWallpaper || currentImage.src === 'image/default.svg') {
 						nextImage.classList.add('active');
@@ -170,7 +171,7 @@ class WallpaperManager {
 				}
 			);
 
-			tempImage.src = path;
+			tempImage.src = imagePath;
 		});
 	}
 }

@@ -8,6 +8,11 @@ class WallhavenService {
 		 * @type {WallpaperResponse[]}
 		 */
 		this.cachedWallpapers = [];
+
+		/**
+		 * @type {Map<string, string>} Map of wallpaper ID to blob URL
+		 */
+		this.imageCache = new Map();
 	}
 
 	/**
@@ -53,6 +58,8 @@ class WallhavenService {
 			this.cachedWallpapers = shuffleArray(wallpapers);
 			console.log(`Total wallpapers fetched from all keywords: ${this.cachedWallpapers.length}`);
 
+			this.preloadImages(this.cachedWallpapers);
+
 			return this.cachedWallpapers.shift();
 		} finally {
 			hideLoading();
@@ -93,6 +100,58 @@ class WallhavenService {
 		const { data } = await response.json();
 
 		return data;
+	}
+
+	/**
+	 * Preloads images and cache them as blobs for offline access
+	 * @param {WallpaperResponse[]} wallpapers
+	 */
+	preloadImages(wallpapers) {
+		this.clearImageCache();
+
+		for (const wallpaper of wallpapers) {
+			this.cacheImage(wallpaper)
+				.catch((error) => console.error(`Failed to cache image ${wallpaper.id}:`, error));
+		}
+	}
+
+	/**
+	 * Cache a single image as blob
+	 * @param {WallpaperResponse} wallpaper
+	 */
+	async cacheImage(wallpaper) {
+		if (this.imageCache.has(wallpaper.id)) {
+			return;
+		}
+
+		const response = await fetch(getProxiedUrl(wallpaper.path));
+		if (!response.ok) {
+			throw new Error(`Failed to fetch image: ${response.status}`);
+		}
+
+		const blob = await response.blob();
+		const blobUrl = URL.createObjectURL(blob);
+
+		this.imageCache.set(wallpaper.id, blobUrl);
+	}
+
+	/**
+	 * Get cached blob URL for wallpaper, or original path if not cached
+	 * @param {WallpaperResponse} wallpaper
+	 * @returns {string}
+	 */
+	getCachedImageUrl(wallpaper) {
+		return this.imageCache.get(wallpaper.id) || wallpaper.path;
+	}
+
+	/**
+	 * Clear image cache and revoke blob URLs to free memory
+	 */
+	clearImageCache() {
+		for (const blobUrl of this.imageCache.values()) {
+			URL.revokeObjectURL(blobUrl);
+		}
+		this.imageCache.clear();
 	}
 }
 
