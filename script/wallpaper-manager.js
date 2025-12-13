@@ -1,5 +1,5 @@
 import { settings } from './settings.js';
-import { UIController } from './ui-controller.js';
+import { initializeUI, setDebugText, hideError, showError, updateWallpaperInfo, setNextWallpaperCallback } from './ui.js';
 
 class WallpaperManager {
 	constructor(service) {
@@ -12,7 +12,9 @@ class WallpaperManager {
 		this.wallpaperImage1 = document.getElementById('wallpaper-image-1');
 		this.wallpaperImage2 = document.getElementById('wallpaper-image-2');
 		this.usingFirstImage = true;
-		this.ui = new UIController();
+
+		initializeUI();
+		setNextWallpaperCallback(() => this.nextWallpaper());
 
 		this.applyScaling();
 	}
@@ -22,6 +24,17 @@ class WallpaperManager {
 			this.container.classList.add('cover');
 		} else {
 			this.container.classList.remove('cover');
+		}
+	}
+
+	resetAutoUpdateTimer() {
+		if (this.timer) {
+			clearInterval(this.timer);
+		}
+
+		const updateInterval = settings.getUpdateInterval();
+		if (updateInterval > 0) {
+			this.timer = setInterval(() => this.updateWallpaper(), updateInterval);
 		}
 	}
 
@@ -37,13 +50,18 @@ class WallpaperManager {
 		return await this.updateWallpaper();
 	}
 
+	async nextWallpaper() {
+		await this.updateWallpaper();
+		this.resetAutoUpdateTimer();
+	}
+
 	async updateWallpaper() {
 		if (this.isLoading) {
 			return;
 		}
 
 		this.isLoading = true;
-		this.ui.hideError();
+		hideError();
 
 		let maxRetries = 1;
 		if (!this.currentWallpaper) {
@@ -53,7 +71,6 @@ class WallpaperManager {
 		let attempt = 0;
 		while (attempt < maxRetries) {
 			try {
-				this.ui.showLoading();
 				const wallpaper = await this.service.updateWallpaper();
 
 				this.currentWallpaper = wallpaper;
@@ -64,17 +81,16 @@ class WallpaperManager {
 				attempt++;
 
 				console.error(`Attempt ${attempt} failed:`, error);
-				this.ui.setDebugText(error);
+				setDebugText(error);
 
 				if (attempt >= maxRetries) {
-					this.ui.showError(error);
+					showError(error);
 					console.error('Failed to update wallpaper after retries:', error);
 				} else {
 					console.log(`Retrying... (${attempt}/${maxRetries})`);
 					await new Promise(resolve => setTimeout(resolve, settings.getDelayToRetry()));
 				}
 			} finally {
-				this.ui.hideLoading();
 				this.isLoading = false;
 			}
 		}
@@ -84,7 +100,9 @@ class WallpaperManager {
 	 * @param {WallpaperResponse} wallpaper
 	 * @returns {Promise<void>}
 	 */
-	displayWallpaper({ id, url, path, resolution, category, purity }) {
+	displayWallpaper(wallpaper) {
+		const { id, path, resolution } = wallpaper;
+
 		return new Promise((resolve, reject) => {
 			let tempImage = new Image();
 
@@ -131,7 +149,7 @@ class WallpaperManager {
 
 					this.usingFirstImage = !this.usingFirstImage;
 
-					this.ui.updateWallpaperInfo({ id, url, resolution, category, purity });
+					updateWallpaperInfo(wallpaper);
 
 					console.log(`Displaying: ID=${id}, Resolution=${resolution}`);
 

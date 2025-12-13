@@ -1,5 +1,6 @@
 import { settings } from './settings.js';
-import { generateSeed, getProxiedUrl, shuffleArray } from './utils.js';
+import { showLoading, hideLoading } from './ui.js';
+import { generateSeed, getProxiedUrl, normalizeForUrlSearchParams, shuffleArray } from './utils.js';
 
 class WallhavenService {
 	constructor() {
@@ -25,31 +26,37 @@ class WallhavenService {
 	 * @returns {Promise<WallpaperResponse>}
 	 */
 	async fetchWallpapers() {
-		const keywords = settings.getSearchQuery().split(/\s*[,;|]\s*/);
+		showLoading();
 
-		const wallpaperPromises = keywords
-			.map(keyword => keyword.trim())
-			.map(keyword => this.fetchWallpapersForKeyword(keyword));
+		try {
+			const keywords = settings.getSearchQuery().split(/\s*[,;|]\s*/);
 
-		const responses = await Promise.allSettled(wallpaperPromises);
+			const wallpaperPromises = keywords
+				.map(keyword => keyword.trim())
+				.map(this.fetchWallpapersForKeyword);
 
-		/**
-		 * @type {WallpaperResponse[]}
-		 */
-		const wallpapers = responses
-			.filter(({ status }) => status === 'fulfilled')
-			.map(({ value }) => value)
-			.filter(({ length }) => length > 0)
-			.flat();
+			const responses = await Promise.allSettled(wallpaperPromises);
 
-		if (wallpapers.length === 0) {
-			throw new Error('No wallpapers found for any of the keywords');
+			/**
+			 * @type {WallpaperResponse[]}
+			 */
+			const wallpapers = responses
+				.filter(({ status }) => status === 'fulfilled')
+				.map(({ value }) => value)
+				.filter(({ length }) => length > 0)
+				.flat();
+
+			if (wallpapers.length === 0) {
+				throw new Error('No wallpapers found for any of the keywords');
+			}
+
+			this.cachedWallpapers = shuffleArray(wallpapers);
+			console.log(`Total wallpapers fetched from all keywords: ${this.cachedWallpapers.length}`);
+
+			return this.cachedWallpapers.shift();
+		} finally {
+			hideLoading();
 		}
-
-		this.cachedWallpapers = shuffleArray(wallpapers);
-		console.log(`Total wallpapers fetched from all keywords: ${this.cachedWallpapers.length}`);
-
-		return this.cachedWallpapers.shift();
 	}
 
 	/**
@@ -70,7 +77,7 @@ class WallhavenService {
 		}
 
 		const params = new URLSearchParams({
-			...effectiveSettings,
+			...normalizeForUrlSearchParams(effectiveSettings),
 			q,
 			seed
 		});

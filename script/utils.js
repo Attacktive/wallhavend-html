@@ -5,16 +5,14 @@ import { settings } from './settings.js';
  * @param {string | T[]} source
  * @returns {string | T}
  */
-function pickRandomElement(source) {
-	return source[Math.floor(Math.random() * source.length)];
-}
+const pickRandomElement = source => source[Math.floor(Math.random() * source.length)];
 
 /**
  * @template T
  * @param {T[]} array
  * @returns {T[]} shuffled array
  */
-function shuffleArray(array) {
+const shuffleArray = array => {
 	const clone = [...array];
 
 	for (let i = clone.length - 1; i > 0; i--) {
@@ -23,12 +21,12 @@ function shuffleArray(array) {
 	}
 
 	return clone;
-}
+};
 
 /**
  * @returns {string} Seed for Wallhaven API that matches <code>[a-zA-z0-9]{6}</code>
  */
-function generateSeed() {
+const generateSeed = () => {
 	const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
 	let seed = '';
@@ -37,12 +35,12 @@ function generateSeed() {
 	}
 
 	return seed;
-}
+};
 
 /**
  * @param {string} destination
  */
-function getProxiedUrl(destination) {
+const getProxiedUrl = destination => {
 	console.debug(`getProxiedUrl(${destination})`);
 
 	const encodedDestination = encodeURIComponent(destination);
@@ -51,9 +49,9 @@ function getProxiedUrl(destination) {
 	console.debug('proxied url', proxiedUrl);
 
 	return proxiedUrl;
-}
+};
 
-function copyToClipboardLegacy(content) {
+const copyToClipboardLegacy = content => {
 	const textarea = document.createElement('textarea');
 	textarea.value = content;
 
@@ -69,9 +67,9 @@ function copyToClipboardLegacy(content) {
 	} finally {
 		document.body.removeChild(textarea);
 	}
-}
+};
 
-async function copyToClipboard(content) {
+const copyToClipboard = async content => {
 	try {
 		await navigator.clipboard.writeText(content);
 	} catch (error) {
@@ -84,6 +82,22 @@ async function copyToClipboard(content) {
 			throw nestedError;
 		}
 	}
-}
+};
 
-export { pickRandomElement, shuffleArray, generateSeed, getProxiedUrl, copyToClipboard };
+/**
+ * @param {WallhavenParameters} wallhavenParameters
+ * @returns {Record<string, string>}
+ */
+const normalizeForUrlSearchParams = wallhavenParameters => Object.fromEntries(
+	Object.entries(wallhavenParameters)
+		.filter(([_key, value]) => value !== undefined)
+		.map(([key, value]) => {
+			if (Array.isArray(value)) {
+				return [key, value];
+			}
+
+			return [key, String(value)];
+		})
+);
+
+export { pickRandomElement, shuffleArray, generateSeed, getProxiedUrl, copyToClipboard, normalizeForUrlSearchParams };
