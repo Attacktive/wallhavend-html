@@ -11,7 +11,6 @@ interface WallhavendSettings {
 	updateInterval: number;
 	scaling: ImageScaling;
 	showOverlay: boolean;
-	debug: boolean;
 }
 
 interface WallhavenParameters {

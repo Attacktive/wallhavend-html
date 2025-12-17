@@ -1,5 +1,5 @@
 import { settings } from './settings.js';
-import { initializeUI, setDebugText, hideError, showError, updateWallpaperInfo, setNextWallpaperCallback } from './ui.js';
+import { initializeUI, hideError, showError, updateWallpaperInfo, setNextWallpaperCallback } from './ui.js';
 
 class WallpaperManager {
 	constructor(service) {
@@ -107,7 +107,6 @@ class WallpaperManager {
 				attempt++;
 
 				console.error(`Attempt ${attempt} failed:`, error);
-				setDebugText(error);
 
 				if (attempt >= maxRetries) {
 					showError(error);

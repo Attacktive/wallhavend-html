@@ -107,10 +107,6 @@ html, body {
 	pointer-events: none;
 }
 
-#debug-panel.hidden {
-	display: none;
-}
-
 .action-buttons {
 	display: flex;
 	align-items: center;

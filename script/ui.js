@@ -1,15 +1,13 @@
 import { settings } from './settings.js';
 import { copyToClipboard } from './utils.js';
 
-let overlay, overlayToggle, infoText, debugPanel, debugText, wallhavenLink, nextWallpaperButton, errorMessage, toastMessage, loadingSpinner;
+let overlay, overlayToggle, infoText, wallhavenLink, nextWallpaperButton, errorMessage, toastMessage, loadingSpinner;
 
 function getElements() {
 	if (!overlay) {
 		overlay = document.getElementById('overlay');
 		overlayToggle = document.getElementById('overlay-toggle');
 		infoText = document.getElementById('info-text');
-		debugPanel = document.getElementById('debug-panel');
-		debugText = document.getElementById('debug-text');
 		wallhavenLink = document.getElementById('wallhaven-link');
 		nextWallpaperButton = document.getElementById('next-wallpaper');
 		errorMessage = document.getElementById('error-message');
@@ -24,10 +22,6 @@ function initializeUI() {
 	if (!settings.toShowOverlay()) {
 		overlay.classList.add('hidden');
 		return;
-	}
-
-	if (settings.toDebug()) {
-		debugPanel.classList.remove('hidden');
 	}
 
 	const storedCollapsed = localStorage.getItem('overlayCollapsed');
@@ -55,13 +49,6 @@ function initializeUI() {
 				updateToggleLabel();
 			}
 		);
-	}
-}
-
-function setDebugText(text) {
-	if (settings.toDebug()) {
-		getElements();
-		debugText.textContent = text;
 	}
 }
 
@@ -158,7 +145,6 @@ function setNextWallpaperCallback(callback) {
 
 export {
 	initializeUI,
-	setDebugText,
 	showLoading,
 	hideLoading,
 	showError,

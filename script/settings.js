@@ -9,8 +9,7 @@ class Settings {
 		DEFAULT_KEYWORDS: 'landscape, autumn, winter, nature',
 		DEFAULT_WALLPAPER_DURATION: 60_000,
 		DEFAULT_SCALING: 'contain',
-		DEFAULT_SHOW_OVERLAY: true,
-		DEFAULT_DEBUG: false
+		DEFAULT_SHOW_OVERLAY: true
 	};
 
 	/**
@@ -40,9 +39,9 @@ class Settings {
 	#getWallhavendSettings() {
 		console.debug('[getWallhavendSettings] from parameters from end user', this.#rawParameters);
 
-		const { searchQuery, updateInterval, scaling, showOverlay, debug } = this.#rawParameters;
+		const { searchQuery, updateInterval, scaling, showOverlay } = this.#rawParameters;
 
-		return { searchQuery, updateInterval, scaling, showOverlay, debug };
+		return { searchQuery, updateInterval, scaling, showOverlay };
 	}
 
 	/**
@@ -88,13 +87,6 @@ class Settings {
 	 */
 	toShowOverlay() {
 		return this.#getWallhavendSettings().showOverlay ?? Settings.#CONSTANTS.DEFAULT_SHOW_OVERLAY;
-	}
-
-	/**
-	 * @returns {boolean}
-	 */
-	toDebug() {
-		return this.#getWallhavendSettings().debug ?? Settings.#CONSTANTS.DEFAULT_DEBUG;
 	}
 
 	getDelayToDisplayError() {
