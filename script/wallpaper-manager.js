@@ -59,7 +59,7 @@ class WallpaperManager {
 	}
 
 	async nextWallpaper() {
-		await this.updateWallpaper();
+		await this.showNext();
 		this.resetAutoUpdateTimer();
 	}
 
