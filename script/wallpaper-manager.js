@@ -7,6 +7,8 @@ class WallpaperManager {
 		this.timer = null;
 		this.currentWallpaper = undefined;
 		this.isLoading = false;
+		this.wallpaperHistory = [];
+		this.wallpaperHistoryIndex = -1;
 
 		this.container = document.getElementById('wallpaper-container');
 		this.wallpaperImage1 = document.getElementById('wallpaper-image-1');
@@ -15,6 +17,12 @@ class WallpaperManager {
 
 		initializeUI();
 		setNextWallpaperCallback(() => this.nextWallpaper());
+
+		this.prevButton = document.getElementById('prev-wallpaper');
+		this.nextButton = document.getElementById('next-wallpaper');
+		this.prevButton?.addEventListener('click', () => this.showPrevious());
+		this.nextButton?.addEventListener('click', () => this.showNext());
+		this.updateNavButtons();
 
 		this.applyScaling();
 	}
@@ -34,7 +42,7 @@ class WallpaperManager {
 
 		const updateInterval = settings.getUpdateInterval();
 		if (updateInterval > 0) {
-			this.timer = setInterval(() => this.updateWallpaper(), updateInterval);
+			this.timer = setInterval(() => this.showNext(), updateInterval);
 		}
 	}
 
@@ -45,9 +53,9 @@ class WallpaperManager {
 			throw new Error(`Provide a valid update interval instead of ${updateInterval}.`);
 		}
 
-		this.timer = setInterval(() => this.updateWallpaper(), updateInterval);
+		this.timer = setInterval(() => this.showNext(), updateInterval);
 
-		return await this.updateWallpaper();
+		return await this.showNext();
 	}
 
 	async nextWallpaper() {
@@ -55,8 +63,17 @@ class WallpaperManager {
 		this.resetAutoUpdateTimer();
 	}
 
-	async updateWallpaper() {
+	async showNext() {
 		if (this.isLoading) {
+			return;
+		}
+
+		if (this.wallpaperHistoryIndex < this.wallpaperHistory.length - 1) {
+			this.wallpaperHistoryIndex++;
+			const wallpaper = this.wallpaperHistory[this.wallpaperHistoryIndex];
+			this.currentWallpaper = wallpaper;
+			await this.displayWallpaper(wallpaper);
+			this.updateNavButtons();
 			return;
 		}
 
@@ -73,8 +90,17 @@ class WallpaperManager {
 			try {
 				const wallpaper = await this.service.updateWallpaper();
 
+				if (this.wallpaperHistoryIndex < this.wallpaperHistory.length - 1) {
+					this.wallpaperHistory = this.wallpaperHistory.slice(0, this.wallpaperHistoryIndex + 1);
+				}
+
+				this.wallpaperHistory.push(wallpaper);
+				this.wallpaperHistoryIndex = this.wallpaperHistory.length - 1;
+
 				this.currentWallpaper = wallpaper;
 				await this.displayWallpaper(wallpaper);
+
+				this.updateNavButtons();
 
 				break;
 			} catch (error) {
@@ -93,6 +119,29 @@ class WallpaperManager {
 			} finally {
 				this.isLoading = false;
 			}
+		}
+	}
+
+	async showPrevious() {
+		if (this.isLoading) {
+			return;
+		}
+
+		if (this.wallpaperHistoryIndex <= 0) {
+			this.updateNavButtons();
+			return;
+		}
+
+		this.wallpaperHistoryIndex--;
+		const wallpaper = this.wallpaperHistory[this.wallpaperHistoryIndex];
+		this.currentWallpaper = wallpaper;
+		await this.displayWallpaper(wallpaper);
+		this.updateNavButtons();
+	}
+
+	updateNavButtons() {
+		if (this.prevButton) {
+			this.prevButton.disabled = this.wallpaperHistoryIndex <= 0;
 		}
 	}
 
