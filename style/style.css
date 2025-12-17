@@ -55,7 +55,51 @@ html, body {
 	right: 0;
 	background: var(--overlay-bg);
 	padding: 12px 20px;
-	transition: opacity 0.3s;
+	transition: opacity 0.3s, padding 0.25s ease;
+}
+
+.overlay.collapsed {
+	padding: 6px 20px;
+}
+
+
+.info-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	max-width: 95%;
+	margin: 0 auto;
+	font-size: 0.9rem;
+	overflow: hidden;
+	max-height: 200px;
+	opacity: 1;
+	transform: translateY(0);
+	transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
+}
+
+.overlay.collapsed .info-bar {
+	max-height: 0;
+	opacity: 0;
+	transform: translateY(8px);
+	pointer-events: none;
+}
+
+#overlay-toggle {
+	position: absolute;
+	top: -14px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: var(--overlay-bg);
+	border: 1px solid rgb(255 255 255 / 15%);
+	color: var(--text-primary);
+	padding: 4px 10px;
+	border-radius: 999px;
+	cursor: pointer;
+	line-height: 1;
+}
+
+#overlay-toggle:hover {
+	border-color: rgb(255 255 255 / 25%);
 }
 
 .overlay.hidden {
@@ -65,15 +109,6 @@ html, body {
 
 #debug-panel.hidden {
 	display: none;
-}
-
-.info-bar {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	max-width: 95%;
-	margin: 0 auto;
-	font-size: 0.9rem;
 }
 
 .action-buttons {

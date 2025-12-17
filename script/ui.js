@@ -1,11 +1,12 @@
 import { settings } from './settings.js';
 import { copyToClipboard } from './utils.js';
 
-let overlay, infoText, debugPanel, debugText, wallhavenLink, nextWallpaperButton, errorMessage, toastMessage, loadingSpinner;
+let overlay, overlayToggle, infoText, debugPanel, debugText, wallhavenLink, nextWallpaperButton, errorMessage, toastMessage, loadingSpinner;
 
 function getElements() {
 	if (!overlay) {
 		overlay = document.getElementById('overlay');
+		overlayToggle = document.getElementById('overlay-toggle');
 		infoText = document.getElementById('info-text');
 		debugPanel = document.getElementById('debug-panel');
 		debugText = document.getElementById('debug-text');
@@ -22,10 +23,38 @@ function initializeUI() {
 
 	if (!settings.toShowOverlay()) {
 		overlay.classList.add('hidden');
+		return;
 	}
 
 	if (settings.toDebug()) {
 		debugPanel.classList.remove('hidden');
+	}
+
+	const storedCollapsed = localStorage.getItem('overlayCollapsed');
+	if (storedCollapsed === 'true') {
+		overlay.classList.add('collapsed');
+	}
+
+	const updateToggleLabel = () => {
+		const isCollapsed = overlay.classList.contains('collapsed');
+		if (overlayToggle) {
+			overlayToggle.textContent = isCollapsed? '🔺': '🔻';
+			overlayToggle.title = isCollapsed? 'Expand': 'Collapse';
+			overlayToggle.setAttribute('aria-label', isCollapsed? 'Expand': 'Collapse');
+		}
+	};
+
+	updateToggleLabel();
+
+	if (overlayToggle) {
+		overlayToggle.addEventListener(
+			'click',
+			() => {
+				overlay.classList.toggle('collapsed');
+				localStorage.setItem('overlayCollapsed', overlay.classList.contains('collapsed')? 'true': 'false');
+				updateToggleLabel();
+			}
+		);
 	}
 }
 
