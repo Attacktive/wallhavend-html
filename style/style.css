@@ -57,12 +57,12 @@ html, body {
 	border: 1px solid rgb(255 255 255 / 15%);
 	border-bottom: none;
 	border-radius: 12px 12px 0 0;
-	padding: 24px 20px 6px 20px;
+	padding: 24px 20px 6px;
 	transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .overlay.collapsed {
-	padding: 24px 20px 6px 20px;
+	padding: 24px 20px 6px;
 }
 
 
@@ -89,7 +89,7 @@ html, body {
 }
 
 .overlay:not(.collapsed) {
-	padding: 24px 20px 12px 20px;
+	padding: 24px 20px 12px;
 }
 
 #overlay-toggle {
