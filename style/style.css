@@ -54,12 +54,15 @@ html, body {
 	left: 0;
 	right: 0;
 	background: var(--overlay-bg);
-	padding: 12px 20px;
-	transition: opacity 0.3s, padding 0.25s ease;
+	border: 1px solid rgb(255 255 255 / 15%);
+	border-bottom: none;
+	border-radius: 12px 12px 0 0;
+	padding: 24px 20px 6px 20px;
+	transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .overlay.collapsed {
-	padding: 6px 20px;
+	padding: 24px 20px 6px 20px;
 }
 
 
@@ -71,35 +74,41 @@ html, body {
 	margin: 0 auto;
 	font-size: 0.9rem;
 	overflow: hidden;
-	max-height: 200px;
-	opacity: 1;
-	transform: translateY(0);
-	transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.25s ease;
-}
-
-.overlay.collapsed .info-bar {
 	max-height: 0;
 	opacity: 0;
 	transform: translateY(8px);
 	pointer-events: none;
+	transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.overlay:not(.collapsed) .info-bar {
+	max-height: 200px;
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+.overlay:not(.collapsed) {
+	padding: 24px 20px 12px 20px;
 }
 
 #overlay-toggle {
 	position: absolute;
-	top: -14px;
+	top: 6px;
 	left: 50%;
 	transform: translateX(-50%);
-	background: var(--overlay-bg);
-	border: 1px solid rgb(255 255 255 / 15%);
+	background: transparent;
+	border: none;
 	color: var(--text-primary);
-	padding: 4px 10px;
-	border-radius: 999px;
+	padding: 4px 8px;
+	border-radius: 4px;
 	cursor: pointer;
 	line-height: 1;
+	transition: background-color 0.2s ease-out;
 }
 
 #overlay-toggle:hover {
-	border-color: rgb(255 255 255 / 25%);
+	background-color: rgb(255 255 255 / 10%);
 }
 
 .overlay.hidden {
