@@ -24,31 +24,29 @@ function initializeUI() {
 		return;
 	}
 
-	const storedCollapsed = localStorage.getItem('overlayCollapsed');
-	if (storedCollapsed === 'true') {
-		overlay.classList.add('collapsed');
-	}
-
-	const updateToggleLabel = () => {
-		const isCollapsed = overlay.classList.contains('collapsed');
-		if (overlayToggle) {
-			overlayToggle.textContent = isCollapsed? '🔺': '🔻';
-			overlayToggle.title = isCollapsed? 'Expand': 'Collapse';
-			overlayToggle.setAttribute('aria-label', isCollapsed? 'Expand': 'Collapse');
-		}
-	};
-
-	updateToggleLabel();
-
 	if (overlayToggle) {
+		updateToggleLabel();
+
 		overlayToggle.addEventListener(
 			'click',
 			() => {
 				overlay.classList.toggle('collapsed');
-				localStorage.setItem('overlayCollapsed', overlay.classList.contains('collapsed')? 'true': 'false');
 				updateToggleLabel();
 			}
 		);
+	}
+}
+
+function updateToggleLabel() {
+	const isCollapsed = overlay.classList.contains('collapsed');
+	if (isCollapsed) {
+		overlayToggle.textContent = '🔺';
+		overlayToggle.title = 'Expand';
+		overlayToggle.setAttribute('aria-label', 'Expand');
+	} else {
+		overlayToggle.textContent = '🔻';
+		overlayToggle.title = 'Collapse';
+		overlayToggle.setAttribute('aria-label', 'Collapse');
 	}
 }
 
