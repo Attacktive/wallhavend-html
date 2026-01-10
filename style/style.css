@@ -125,13 +125,14 @@ html, body {
 .nav-buttons {
 	display: flex;
 	align-items: center;
-	gap: 0;
+	gap: 8px;
 }
 
 .nav-buttons button {
 	padding: 6px 12px;
 	font-size: 1.1rem;
 	line-height: 1;
+	border-radius: 6px;
 }
 
 .nav-buttons button:first-child {
@@ -142,10 +143,6 @@ html, body {
 .nav-buttons button:last-child {
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
-}
-
-.nav-buttons button + button {
-	border-left: 1px solid rgb(233 69 96 / 45%);
 }
 
 .nav-buttons button:disabled {
