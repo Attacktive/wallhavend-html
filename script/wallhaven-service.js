@@ -113,14 +113,34 @@ class WallhavenService {
 	/**
 	 * Preloads images and caches them as blobs for offline access
 	 * @param {WallpaperResponse[]} wallpapers
+	 * @param {number} numberOfQueues the number of queues to preload images at a time
 	 */
-	preloadImages(wallpapers) {
+	preloadImages(wallpapers, numberOfQueues = 5) {
 		this.clearImageCache();
+
+		const queue = [...wallpapers];
+		const manageQueue = async () => {
+			while (queue.length > 0) {
+				const wallpaper = queue.shift();
+				try {
+					await this.cacheImage(wallpaper);
+				} catch (e) {
+					console.error(`Failed to cache ${wallpaper.id}:`, e.message);
+				}
+			}
+		};
 
 		for (const wallpaper of wallpapers) {
 			this.cacheImage(wallpaper)
 				.catch((error) => console.error(`Failed to cache image ${wallpaper.id}:`, error));
 		}
+
+		const workers = Array(numberOfQueues)
+			.fill(null)
+			.map(manageQueue);
+
+		Promise.all(workers)
+			.then(() => console.log("✨ All preloads finished!"));
 	}
 
 	/**
