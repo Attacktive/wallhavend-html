@@ -58,9 +58,17 @@ class WallhavenService {
 			this.cachedWallpapers = shuffleArray(wallpapers);
 			console.log(`Total wallpapers fetched from all keywords: ${this.cachedWallpapers.length}`);
 
+			const firstWallpaper = this.cachedWallpapers.shift();
+
+			try {
+				await this.cacheImage(firstWallpaper);
+			} catch (error) {
+				console.error('First image cache failed:', error);
+			}
+
 			this.preloadImages(this.cachedWallpapers);
 
-			return this.cachedWallpapers.shift();
+			return firstWallpaper;
 		} finally {
 			hideLoading();
 		}
@@ -103,7 +111,7 @@ class WallhavenService {
 	}
 
 	/**
-	 * Preloads images and cache them as blobs for offline access
+	 * Preloads images and caches them as blobs for offline access
 	 * @param {WallpaperResponse[]} wallpapers
 	 */
 	preloadImages(wallpapers) {
@@ -141,7 +149,7 @@ class WallhavenService {
 	 * @returns {string}
 	 */
 	getCachedImageUrl(wallpaper) {
-		return this.imageCache.get(wallpaper.id) || wallpaper.path;
+		return this.imageCache.get(wallpaper.id) || getProxiedUrl(wallpaper.path);
 	}
 
 	/**

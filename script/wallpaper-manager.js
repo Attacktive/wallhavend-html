@@ -206,20 +206,13 @@ class WallpaperManager {
 
 			tempImage.addEventListener(
 				'error',
-				(errorEvent) => {
-					let errorEventSerialized;
-
-					try {
-						errorEventSerialized = JSON.stringify(errorEvent);
-					} catch (errorSerializing) {
-						errorEventSerialized = errorEvent.error;
-					}
-
-					console.error('Failed to load image', errorEventSerialized);
+				() => {
+					// the ErrorEvent parameter would only have `isTrusted` 🤷
+					const error = new Error(`Failed to load image at: ${imagePath}`);
+					console.error(error);
 
 					cleanupTempImage();
 
-					const error = errorEvent.error ?? new Error('Failed to load image for an unknown reason! 💀');
 					reject(error);
 				}
 			);
