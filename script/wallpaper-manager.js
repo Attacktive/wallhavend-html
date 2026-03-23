@@ -207,7 +207,15 @@ class WallpaperManager {
 			tempImage.addEventListener(
 				'error',
 				(errorEvent) => {
-					console.error('Failed to load image', errorEvent);
+					let errorEventSerialized;
+
+					try {
+						errorEventSerialized = JSON.stringify(errorEvent);
+					} catch (errorSerializing) {
+						errorEventSerialized = errorEvent.error;
+					}
+
+					console.error('Failed to load image', errorEventSerialized);
 
 					cleanupTempImage();
 
