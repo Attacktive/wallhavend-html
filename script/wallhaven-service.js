@@ -158,6 +158,10 @@ class WallhavenService {
 		}
 
 		const blob = await response.blob();
+		if (!blob.type.startsWith('image/')) {
+			throw new Error(`The server lied! Sent back a non-image (${blob.type}). Size: ${blob.size}`);
+		}
+
 		const blobUrl = URL.createObjectURL(blob);
 
 		this.imageCache.set(wallpaper.id, blobUrl);
