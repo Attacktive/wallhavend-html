@@ -34,7 +34,7 @@ class WallhavenService {
 		showLoading();
 
 		try {
-			const keywords = settings.getSearchQuery().split(/\s*[,;|]\s*/);
+			const keywords = settings.getSearchQuery().split(/[\s,;|]+/);
 
 			const wallpaperPromises = keywords
 				.map(keyword => keyword.trim())
